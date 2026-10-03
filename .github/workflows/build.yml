@@ -1,0 +1,73 @@
+name: Build and test plugins
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      live_inference:
+        description: Download the 1.49 GB Q4_K model and run Windows real-model acceptance
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+jobs:
+  windows:
+    runs-on: windows-2025
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: '10.0.100'
+      - run: python -m pip install --quiet cmake
+      - run: python tools/build.py runtime --acceleration cpu
+      - run: python tools/build.py windows
+      - run: python -m unittest discover -s tests -v
+      - if: github.event_name == 'workflow_dispatch' && inputs.live_inference
+        run: dotnet run --project windows/Acceptance -c Release -- .build/acceptance-assets .deps/crispasr/samples/jfk.wav
+      - uses: actions/upload-artifact@v4
+        with:
+          name: R2T2CrispASR-windows-x64
+          path: dist/
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: windows-build-log
+          path: .build/build.log
+
+  macos:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: macos-15
+            architecture: arm64
+            acceleration: metal
+          - runner: macos-15-intel
+            architecture: x86_64
+            acceleration: cpu
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - run: python -m pip install --quiet cmake
+      - run: python tools/build.py runtime --acceleration ${{ matrix.acceleration }} --arch ${{ matrix.architecture }}
+      - run: python tools/build.py macos
+      - run: python -m unittest discover -s tests -v
+      - uses: actions/upload-artifact@v4
+        with:
+          name: R2T2CrispASR-macos-${{ matrix.architecture }}
+          path: dist/*.zip*
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: macos-${{ matrix.architecture }}-build-log
+          path: .build/build.log

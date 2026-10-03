@@ -1,0 +1,4 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup><OutputType>Exe</OutputType><TargetFramework>net10.0</TargetFramework><ImplicitUsings>enable</ImplicitUsings><Nullable>enable</Nullable><AssemblyName>R2T2Installer</AssemblyName></PropertyGroup>
+  <ItemGroup><ProjectReference Include="../../.deps/typewhisper-win/src/TypeWhisper.PluginHost/TypeWhisper.PluginHost.csproj" /></ItemGroup>
+</Project>

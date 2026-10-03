@@ -1,0 +1,9 @@
+.worktrees/
+.deps/
+.build/
+dist/
+**/bin/
+**/obj/
+**/.build/
+__pycache__/
+*.user

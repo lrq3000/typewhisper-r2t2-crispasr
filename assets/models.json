@@ -1,0 +1,11 @@
+{
+  "repository": "cstr/confucius4-r2t2-GGUF",
+  "revision": "6a9aa41833f577a7a2f5d0a2ed61d8250c0c57b4",
+  "licenseFile": "MODEL_LICENSE",
+  "languages": ["zh", "en", "yue", "ar", "de", "fr", "es", "pt", "id", "it", "ko", "ru", "th", "vi", "ja", "tr", "hi", "ms", "nl", "sv", "da", "fi", "pl", "cs", "fil", "fa", "el", "hu", "mk", "ro"],
+  "languageNames": {"zh":"Chinese","en":"English","yue":"Cantonese","ar":"Arabic","de":"German","fr":"French","es":"Spanish","pt":"Portuguese","id":"Indonesian","it":"Italian","ko":"Korean","ru":"Russian","th":"Thai","vi":"Vietnamese","ja":"Japanese","tr":"Turkish","hi":"Hindi","ms":"Malay","nl":"Dutch","sv":"Swedish","da":"Danish","fi":"Finnish","pl":"Polish","cs":"Czech","fil":"Filipino","fa":"Persian","el":"Greek","hu":"Hungarian","mk":"Macedonian","ro":"Romanian"},
+  "models": [
+    {"id": "r2t2-q8_0", "name": "R2T2 Q8_0", "file": "confucius4-r2t2-q8_0.gguf", "size": 2506723264, "sha256": "6d8936c05befde4775c442ddfca61e3964495781070370b0a7dbdc10f652098f"},
+    {"id": "r2t2-q4_k", "name": "R2T2 Q4_K", "file": "confucius4-r2t2-q4_k.gguf", "size": 1490915264, "sha256": "a754788730d7b2a62542de295d37e431e79795d5bea418fa0e4f9618f0f8e3b3"}
+  ]
+}

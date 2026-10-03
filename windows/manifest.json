@@ -1,0 +1,13 @@
+{
+  "id": "com.typewhisper.r2t2-crispasr",
+  "name": "R2T2 (CrispASR)",
+  "version": "0.1.0",
+  "minHostVersion": "1.1.0",
+  "author": "R2T2 CrispASR plugin contributors",
+  "description": "Local Confucius4-R2T2 batch and realtime transcription using a managed CrispASR runtime.",
+  "categories": ["transcription"],
+  "isLocal": true,
+  "assemblyName": "R2T2CrispASR.dll",
+  "pluginClass": "R2T2CrispASR.R2T2Plugin",
+  "supportedArchitectures": ["x64"]
+}

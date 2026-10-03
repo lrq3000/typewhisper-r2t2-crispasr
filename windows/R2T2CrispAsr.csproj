@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <AssemblyName>R2T2CrispASR</AssemblyName>
+    <Version>0.1.0</Version>
+    <GenerateDependencyFile>true</GenerateDependencyFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove="Tests/**/*.cs" />
+    <Compile Remove="Acceptance/**/*.cs" />
+    <Compile Remove="Installer/**/*.cs" />
+    <ProjectReference Include="../.deps/typewhisper-win/src/TypeWhisper.PluginSDK/TypeWhisper.PluginSDK.csproj" />
+    <Content Include="manifest.json" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="../assets/models.json" Link="models.json" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+</Project>

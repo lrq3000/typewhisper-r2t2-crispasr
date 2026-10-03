@@ -1,0 +1,16 @@
+{
+  "id": "com.typewhisper.r2t2-crispasr",
+  "name": "R2T2 (CrispASR)",
+  "version": "0.1.0",
+  "minHostVersion": "1.7.0",
+  "minOSVersion": "14.0",
+  "sdkCompatibilityVersion": "v1",
+  "supportedArchitectures": ["arm64", "x86_64"],
+  "author": "R2T2 CrispASR plugin contributors",
+  "description": "Local Confucius4-R2T2 transcription using a managed, loopback-only CrispASR runtime.",
+  "hosting": "local",
+  "requiresAPIKey": false,
+  "category": "transcription",
+  "iconSystemName": "waveform.badge.mic",
+  "principalClass": "R2T2CrispASRPlugin"
+}
