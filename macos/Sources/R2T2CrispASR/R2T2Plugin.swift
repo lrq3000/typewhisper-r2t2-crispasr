@@ -95,7 +95,9 @@ final class R2T2CrispASRPlugin: NSObject, LiveTranscriptionCapablePlugin,
     }
     func transcribe(audio: AudioData, language: String?, translate: Bool, prompt: String?) async throws -> PluginTranscriptionResult {
         let (context, hint) = try context(language: language, translate: translate)
-        return try await context.engine.batch(id: context.id, audio: audio, language: hint, unload: context.host.unloadsModelsImmediatelyAfterUse)
+        // SDK 1.7.0 predates the host auto-unload API. Preserve the approved warm
+        // runtime lifecycle through explicit Unload and plugin deactivation.
+        return try await context.engine.batch(id: context.id, audio: audio, language: hint)
     }
     func transcribe(audio: AudioData, language: String?, translate: Bool, prompt: String?,
                     onProgress: @escaping @Sendable (String) -> Bool) async throws -> PluginTranscriptionResult {
@@ -106,7 +108,7 @@ final class R2T2CrispASRPlugin: NSObject, LiveTranscriptionCapablePlugin,
     func createLiveTranscriptionSession(language: String?, translate: Bool, prompt: String?,
                                        onProgress: @escaping @Sendable (String) -> Bool) async throws -> any LiveTranscriptionSession {
         let (context, hint) = try context(language: language, translate: translate)
-        return try await context.engine.live(id: context.id, language: hint, unload: context.host.unloadsModelsImmediatelyAfterUse, onProgress: onProgress)
+        return try await context.engine.live(id: context.id, language: hint, onProgress: onProgress)
     }
     func downloadModel(_ id: String, progress: @escaping @Sendable (Double) -> Void) async throws {
         let (context, _) = try context(language: nil, translate: false)

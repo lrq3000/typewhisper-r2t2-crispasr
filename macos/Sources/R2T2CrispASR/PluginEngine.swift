@@ -11,9 +11,9 @@ actor PluginEngine {
         guard owner == nil else { throw R2T2Error.message("R2T2 is busy. Finish the current recording or model operation first.") }
         let token = UUID(); owner = token; return token
     }
-    private func end(_ token: UUID, success: Bool, unload: Bool = false) {
+    private func end(_ token: UUID, success: Bool) {
         guard owner == token else { return }
-        if !success || unload { runtime.stop() }
+        if !success { runtime.stop() }
         owner = nil
     }
     private func ensureRuntime(id: String, language: String?) async throws {
@@ -23,17 +23,17 @@ actor PluginEngine {
             try await runtime.start(model: model, language: language)
         }
     }
-    func live(id: String, language: String?, unload: Bool,
+    func live(id: String, language: String?,
               onProgress: @escaping @Sendable (String) -> Bool) async throws -> RealtimeSession {
         let token = try begin()
         do {
             try await ensureRuntime(id: id, language: language)
             return try await RealtimeSession.connect(url: runtime.endpoint().realtime, release: { success in
-                await self.end(token, success: success, unload: unload)
+                await self.end(token, success: success)
             }, onProgress: onProgress)
         } catch { end(token, success: false); throw error }
     }
-    func batch(id: String, audio: AudioData, language: String?, unload: Bool) async throws -> PluginTranscriptionResult {
+    func batch(id: String, audio: AudioData, language: String?) async throws -> PluginTranscriptionResult {
         guard audio.wavData.count <= 256 * 1024 * 1024 else { throw R2T2Error.message("Recording exceeds the plugin's upload limit.") }
         let token = try begin()
         do {
@@ -58,7 +58,7 @@ actor PluginEngine {
             guard (response as? HTTPURLResponse)?.statusCode == 200 else { throw R2T2Error.message("CrispASR batch transcription failed.") }
             struct Result: Decodable { let text: String }
             let result = try JSONDecoder().decode(Result.self, from: data)
-            end(token, success: true, unload: unload)
+            end(token, success: true)
             return PluginTranscriptionResult(text: result.text)
         } catch { end(token, success: false); throw error }
     }

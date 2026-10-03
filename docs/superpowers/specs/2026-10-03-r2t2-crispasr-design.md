@@ -16,7 +16,7 @@ on macOS x86_64. CUDA is an optional Windows build variant, requiring its toolki
 Do not advertise Windows ARM64 without a compiled and tested runtime.
 
 Pin TypeWhisper Windows SDK a0ec3220118ab30d0d009cdae34aba5dfe262b7e and
-macOS SDK ea85d180404d169260e422ce52784336d6f1739a. Use upstream source contracts;
+macOS SDK c9958a59454b214f267a9d79fdbf6798b8a6d538 (released v1.7.0). Use upstream source contracts;
 do not distribute a competing SDK assembly/framework with the plugin.
 
 ## Models

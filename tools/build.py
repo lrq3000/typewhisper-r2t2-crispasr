@@ -19,7 +19,7 @@ BUILD = ROOT / ".build"
 PINS = {
     "crispasr": ("CrispStrobe/CrispASR", "340d7085eaa53c40a46dcb73a6d3d0448a480006", None),
     "typewhisper-win": ("TypeWhisper/typewhisper-win", "a0ec3220118ab30d0d009cdae34aba5dfe262b7e", "src/TypeWhisper.PluginSDK"),
-    "typewhisper-mac": ("TypeWhisper/typewhisper-mac", "ea85d180404d169260e422ce52784336d6f1739a", "TypeWhisperPluginSDK/Sources/TypeWhisperPluginSDK"),
+    "typewhisper-mac": ("TypeWhisper/typewhisper-mac", "c9958a59454b214f267a9d79fdbf6798b8a6d538", "TypeWhisperPluginSDK/Sources/TypeWhisperPluginSDK"),
 }
 
 
