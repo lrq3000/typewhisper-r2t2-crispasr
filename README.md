@@ -21,13 +21,19 @@ Python and the platform toolchains are needed only to build from source.
 The plugins use **CrispASR**, not the existing audio.cpp R2T2 plugin. Both are
 separate integrations and have different plugin/provider IDs.
 
-## Validation status
+## Builds and validation
 
-Windows CPU compilation, automated transport/download tests, package-store
-installation in an isolated profile, and real Q4_K model acceptance are checked
-locally. The macOS Swift plugin, native watchdog, tests and CI matrix are included;
-native macOS compilation and TypeWhisper UI/bundle loading require a macOS runner.
-See [verification evidence](docs/verification.md) for the exact checks performed.
+All three native CI builds pass: **Windows x64/CPU**, **macOS arm64/Metal**, and
+**macOS x86_64/CPU**. The Mac builds include eight Swift tests, native watchdog
+acceptance, SDK-symbol compatibility against TypeWhisper 1.7.0, and loading and
+activating the packaged bundle against that host's actual SDK framework.
+
+Download the platform archives and Windows offline installer from the artifacts
+of a successful [GitHub Actions run](https://github.com/lrq3000/typewhisper-r2t2-crispasr/actions).
+Archives include SHA-256 files, license text and setup instructions. Windows
+also passed real Q4_K streaming and batch inference locally. See
+[verification evidence](docs/verification.md) for tested scope and remaining UI
+and macOS real-model acceptance.
 
 ## Install — Windows
 
@@ -119,6 +125,8 @@ and bundle ad hoc, and writes an architecture-specific ZIP and SHA-256.
 It does not embed a competing copy of the SDK.
 Before packaging, it downloads the minimum host release into `.deps/` and checks
 the plugin's SDK imports against that release using TypeWhisper's symbol checker.
+`python3 tools/check_bundle.py` additionally loads and activates the packaged
+bundle against the actual host framework, exercising settings and model selection.
 
 ### Real-model Windows acceptance
 

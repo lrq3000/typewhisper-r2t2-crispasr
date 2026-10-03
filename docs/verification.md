@@ -30,27 +30,56 @@ The real-model check used the plugin API with pinned TypeWhisper SDK contracts
 and a minimal test host. It did not exercise the running TypeWhisper UI or insert
 dictation into another application. It is not a latency benchmark.
 
-## macOS evidence and remaining checks
+## Published native CI evidence
 
-- `python tools/check_swift_syntax.py` parses all ten Swift files with
-  tree-sitter-swift. This checks syntax, **not native type checking or SDK ABI**.
-- A read-only review checked Swift/session ownership, bundle linkage and native
-  supervision. Corrections include final-callback cancellation, entry-time
-  cancellation cleanup, host-matching SDK compilation mode and descendant cleanup.
-- Swift tests include a real RFC6455 peer with fragmented UTF-8 and cancellation
-  regressions. Native watchdog tests exercise abrupt parent exit and descendants
-  that ignore SIGTERM. These tests have **not run on this Windows machine**.
-- The macOS build matrix targets Apple Silicon/Metal and Intel/CPU. Packaging
-  rewrites SDK linkage to the host framework and invokes TypeWhisper's upstream
-  SDK-symbol compatibility checker against the actual minimum host release.
-  This workflow is supplied but has **not been executed or published**.
+Repository: https://github.com/lrq3000/typewhisper-r2t2-crispasr
 
-To finish native macOS verification, run on a Mac:
+Successful native build and integration run:
+https://github.com/lrq3000/typewhisper-r2t2-crispasr/actions/runs/37094516354
+
+The tested source commit is `d21f50747c9ee5cc726703cf18cd0e6e487b08e7`.
+All three jobs passed: Windows x64/CPU, macOS arm64/Metal and macOS x86_64/CPU.
+
+On each Mac architecture:
+
+- The pinned CrispASR runtime and native watchdog compiled successfully.
+- **Eight Swift tests passed**, including real RFC6455 transport with fragmented
+  UTF-8, final callback cancellation and cancellation at method entry.
+- Both native watchdog acceptance tests passed: abrupt host exit and a surviving
+  descendant that ignores SIGTERM after its group leader exits.
+- Release compilation and SDK-symbol compatibility passed against the actual
+  TypeWhisper 1.7.0 framework. CI exposed a newer auto-unload helper absent from
+  that host; the plugin now builds against the released SDK at
+  `c9958a59454b214f267a9d79fdbf6798b8a6d538` and retains the warm runtime until
+  explicit unload or deactivation.
+- `python tools/check_bundle.py` loaded the packaged bundle against that actual
+  framework, discovered its principal class and SDK protocol identity, activated
+  it, resolved bundled model metadata, created its settings view, persisted model
+  selection and deactivated it successfully.
+- Ad-hoc signed architecture-specific bundle ZIPs and SHA-256 files were produced.
+
+All three published archives were downloaded and checked locally with
+`python tools/check_archives.py .build/ci-packages-d21f507`. Exact SHA-256,
+manifest/principal-class metadata, executable bits, runtime patch metadata,
+license files and SDK exclusion passed.
+
+`python tools/check_swift_syntax.py` also parses eleven Swift files locally; this
+portable check supplements the native compiler results above.
+
+## Remaining acceptance
+
+The macOS bundle-loading probe uses the real host SDK framework in an isolated
+test process; it does not exercise the full TypeWhisper application's UI, global
+shortcuts, microphone permissions or insertion into another application. Real
+Q4_K inference was checked on Windows, not yet on a physical Mac/Metal device.
+
+For further native development, run on a Mac:
 
 ```sh
 python3 -m pip install cmake
 python3 tools/build.py runtime --acceleration metal --arch arm64
 python3 tools/build.py macos
+python3 tools/check_bundle.py
 python3 -m unittest discover -s tests -v
 ```
 
@@ -58,5 +87,5 @@ For Intel use `--acceleration cpu --arch x86_64`. Then load the generated bundle
 in an isolated TypeWhisper setup, confirm model download/selection, live text,
 final insertion, restart and unload, and perform real-model Metal/Intel acceptance.
 
-**Remaining blocker:** access to a macOS native runner/toolchain. No macOS binary
-or native macOS success is claimed from Windows-only evidence.
+The native build/toolchain blocker is resolved through GitHub Actions. Full UI
+and physical-device inference acceptance remain separate from these CI checks.

@@ -42,6 +42,7 @@ jobs:
             .build/runtime
           key: ${{ steps.runtime-cache.outputs.cache-primary-key }}
       - run: python tools/build.py windows
+      - run: python tools/check_archives.py dist
       - run: python -m unittest discover -s tests -v
       - if: github.event_name == 'workflow_dispatch' && inputs.live_inference
         run: dotnet run --project windows/Acceptance -c Release -- .build/acceptance-assets .deps/crispasr/samples/jfk.wav
@@ -92,6 +93,7 @@ jobs:
           key: ${{ steps.runtime-cache.outputs.cache-primary-key }}
       - run: python tools/build.py macos
       - run: python tools/check_bundle.py
+      - run: python tools/check_archives.py dist
       - run: python -m unittest discover -s tests -v
       - uses: actions/upload-artifact@v4
         with:
