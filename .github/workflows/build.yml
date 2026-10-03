@@ -91,6 +91,7 @@ jobs:
             .build/runtime
           key: ${{ steps.runtime-cache.outputs.cache-primary-key }}
       - run: python tools/build.py macos
+      - run: python tools/check_bundle.py
       - run: python -m unittest discover -s tests -v
       - uses: actions/upload-artifact@v4
         with:

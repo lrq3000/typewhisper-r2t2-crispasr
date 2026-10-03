@@ -10,6 +10,7 @@ def main():
     root = Path(__file__).resolve().parents[1] / "macos"
     failures = []
     files = [path for path in root.rglob("*.swift") if ".build" not in path.parts]
+    files.append(root.parent / "tools" / "check_bundle.swift")
     for path in files:
         tree = parser.parse(path.read_bytes())
         if tree.root_node.has_error:
@@ -17,7 +18,7 @@ def main():
             while nodes:
                 node = nodes.pop()
                 if node.type == "ERROR" or node.is_missing:
-                    failures.append(f"{path.relative_to(root)}:{node.start_point.row + 1}: {node.type}")
+                    failures.append(f"{path.relative_to(root.parent)}:{node.start_point.row + 1}: {node.type}")
                 nodes.extend(node.children)
     if failures:
         print("\n".join(failures), file=sys.stderr)
